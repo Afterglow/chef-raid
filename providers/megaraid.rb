@@ -63,7 +63,10 @@ action :createspan do
     new_resource.pds.each_pair do |id, pds|
       pdlist = pds
       arraystring = "#{arraystring} -Array#{id} \\[#{pds}\\] "
+    end
     command "/opt/MegaRAID/MegaCLI/MegaCli64 -R#{new_resource.level} #{arraystring}WB RA -strpsz64 -a#{new_resource.controller}"
+  end
+end
 
 action :delete do
   execute "delete ld" do
