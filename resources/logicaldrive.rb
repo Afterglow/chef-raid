@@ -1,4 +1,4 @@
-actions :createld, :delete, :clear
+actions :createld, :createspan, :delete, :clear
 
 attribute :controller, :kind_of => String
 attribute :ld, :kind_of => String
