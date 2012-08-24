@@ -20,7 +20,7 @@
 ## Warning this recipe will clear the configuration of your RAID controller
 ##
 
-raid_controller "0" do
+raid_controller 0 do
   action :clear
   provider node['raid']['provider']
 end
