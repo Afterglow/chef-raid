@@ -14,4 +14,4 @@ Attributes
       }
 Usage
 =====
-There are some examples in `recipes/default.rb` of what can be done to clear controllers or create/delete logical drives and spans. Either use those examples to make your own or use the provided recipes such as `raid::clear` in conjunction with correctly set node attributes to configure the controller.
+There are some examples in `recipes/default.rb` of what can be done to clear controllers or create/delete logical drives and spans. Either use those examples to make your own or use the provided recipes such as `raid::manage` in conjunction with correctly set node attributes to configure the controller.
