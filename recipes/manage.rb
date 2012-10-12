@@ -25,17 +25,29 @@
 # solo for a single shot configuration on a new server.
 #
 
-# Initially clear the configuration
-include_recipe "raid::clear"
+# A defined config will take priority over a template
+unless node.has_key? :raid
+  if node.has_key? :raidtemplate
+    template = data_bag_item('raidtemplates', node[:raidtemplate])
+    node[:raid] = template['raid']
+  end
+end
 
-node['raid']['logicaldrives'].each do |ld|
-  raid_controller ld['controller'] do
-    level ld['raidlevel']
-    pds ld['drives']
-    if pds[0].kind_of?(Array)
-      action :createspan
-    else
-      action :createld
+if node.has_key? :raid
+  # Initially clear the configuration
+  include_recipe "raid::clear"
+
+  if node[:raid].has_key? :logicaldrives
+    node[:raid][:logicaldrives].each do |ld|
+      raid_controller ld[:controller] do
+        level ld[:raidlevel]
+        pds ld[:drives]
+        if pds[0].kind_of?(Array)
+          action :createspan
+        else
+          action :createld
+        end
+      end
     end
   end
 end
