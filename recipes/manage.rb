@@ -26,7 +26,7 @@
 #
 
 # A defined config will take priority over a template
-unless node.has_key? :raid
+unless ((node.has_key? :raid) && (node[:raid].has_key? :provider))
   if node.has_key? :raidtemplate
     template = data_bag_item('raidtemplates', node[:raidtemplate])
     node[:raid] = template['raid']
@@ -39,6 +39,22 @@ if node.has_key? :raid
 
   if node[:raid].has_key? :logicaldrives
     node[:raid][:logicaldrives].each do |ld|
+      if ld[:drives] == 'all'
+        disks = node[:raid_controllers]["#{ld[:controller]}"][:physical_disks]
+        diskarray = []
+        ld[:drives] = []
+        disks.each do |c, cdisks|
+          cdisks.each do |d, disk|
+            diskarray.push("#{c}:#{d}")   # create an array of disks like ['10:1','10:2'....]
+          end
+        end
+          
+        if ld[:raidlevel] == 10
+          ld[:drives] = diskarray.each_slice(2).to_a # Make an array of arrays for createspan          
+       else
+          ld[:drives] = diskarray
+       end          
+      end
       raid_controller ld[:controller] do
         level ld[:raidlevel]
         pds ld[:drives]
